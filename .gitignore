@@ -1,0 +1,8 @@
+dmenu
+*.o
+dmenu.c.orig
+dmenu.c.rejc
+config.def.h.orig
+config.def.h.rejc
+config.h
+stest
