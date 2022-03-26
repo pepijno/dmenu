@@ -13,13 +13,8 @@
           pkgs = nixpkgs.legacyPackages.${system};
           buildInputs = with pkgs; [
             xorg.libX11
-            xorg.libX11.dev
-            xorg.libX11.out
-            xorg.xorgproto
             xorg.libXinerama
-            xorg.libXinerama.dev
             xorg.libXft
-            xorg.libXft.dev
           ];
         in
         rec {
