@@ -1,7 +1,10 @@
 {
   description = "pepijno's patched dmenu";
 
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    nixpkgs.url = "nixpkgs/nixos-unstable";
+    flake-utils.url = github:numtide/flake-utils;
+  };
 
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem
@@ -25,18 +28,20 @@
               inherit buildInputs;
               name = "dmenu";
               src = self;
-              installPhase = ''
-                mkdir -p $out/bin
-                cp dmenu $out/bin
-                cp dmenu_path $out/bin
-                cp dmenu_run $out/bin
+
+              postPatch = ''
+                sed -ri -e 's!\<(dmenu|dmenu_path|stest)\>!'"$out/bin"'/&!g' dmenu_run
+                sed -ri -e 's!\<stest\>!'"$out/bin"'/&!g' dmenu_path
               '';
+
+              preConfigure = ''
+                sed -i "s@PREFIX = /usr/local@PREFIX = $out@g" config.mk
+              '';
+
+              makeFlags = [ "CC:=$(CC)" ];
             };
           };
-          defaultPackage = packages.dmenu;
-          defaultApp = flake-utils.libs.mkApp {
-            drv = defaultPackage;
-          };
+          defaultPackage = self.packages.${system}.dmenu;
           devShell = pkgs.mkShell {
             nativeBuildInputs = buildInputs;
           };
