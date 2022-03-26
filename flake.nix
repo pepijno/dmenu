@@ -34,6 +34,9 @@
             };
           };
           defaultPackage = packages.dmenu;
+          defaultApp = flake-utils.libs.mkApp {
+            drv = defaultPackage;
+          };
           devShell = pkgs.mkShell {
             nativeBuildInputs = buildInputs;
           };
